@@ -7,13 +7,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.IntStream;
 
-public class VernamCipher {
+public class Main {
 
     private static final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in)); // Run-Time insertion
 
     public static void main(String[] args) {
 
-        Integer[] randomKeys = new Integer[]{6, 5, 1, 4, 3, 2, 1, 11, 4, 9, 8, 5}; // keys list provided by sir.
+        Integer[] randomKeys;
+
+        randomKeys = logistic(10, 3.99, 0.56);
+
+
         HashMap<Character, Integer> alphabetsMap = new HashMap<>();
         generateIndexValueMapping(alphabetsMap); // calling method for storing value reference against each character.
 
@@ -32,6 +36,8 @@ public class VernamCipher {
             e.printStackTrace();
         }
 
+
+        System.out.println("randomKeys = " + Arrays.toString(randomKeys));
         OneEyeOwl.SenderEncryption senderEncryption = new OneEyeOwl.SenderEncryption(senderMessage, randomKeys);
         String encryption = senderEncryption.encryption(alphabetsMap);
         System.out.println("encryption = " + encryption);
@@ -50,7 +56,7 @@ public class VernamCipher {
         IntStream.iterate(0, i -> i + 1).limit(textCap.length()).forEach(value -> {
             mapping.put(textCap.charAt(value), (int) textCapBytes[value]);
 //            mapping.put(textCap.charAt(value), value +1);
-            System.out.printf("| %s | %d |\n" , textCap.charAt(value) , (int) textCapBytes[value]);
+            System.out.printf("| %s | %d |\n", textCap.charAt(value), (int) textCapBytes[value]);
         });
         System.out.println("----------");
     }
@@ -59,9 +65,22 @@ public class VernamCipher {
         return message != null && message.matches("^[a-zA-Z]*$");
     }
 
+    public static Integer[] logistic(int sizeOfArray, double r, double Xn) {
 
+        Integer[] tempArray = new Integer[sizeOfArray];
 
+        double xn_plus1;
 
+        for (int i = 0; i < sizeOfArray; i++) {
+
+            xn_plus1 = ((r * Xn) * (1 - Xn));
+            Xn = xn_plus1;
+            int p=(int) (Xn * 26) % 256;
+            tempArray[i] = p;
+        }
+
+        return tempArray;
+    }
 
 
 }
